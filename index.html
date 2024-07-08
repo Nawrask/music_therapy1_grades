@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grade Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 32px; /* Make the text size bigger */
+            line-height: 1.5; /* Spread the text more */
+            max-width: 800px; /* Limit the width to spread the text more */
+            margin-bottom: 20px; /* Increase space between text and input bar */
+        }
+        .highlight {
+            color: red; /* Make the word "code" appear in red */
+        }
+        #code {
+            width: 400px; /* Make the input field wider */
+            height: 40px; /* Make the input field taller */
+            font-size: 24px; /* Increase the font size for better visibility */
+            margin-bottom: 20px; /* Increase space below the input field */
+        }
+        button {
+            font-size: 24px; /* Increase the button font size */
+            padding: 10px 20px; /* Increase the padding for better visibility */
+        }
+        table {
+            font-size: 24px; /* Increase the font size for better visibility */
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid black;
+        }
+        .contact {
+            font-size: 14px; /* Make the contact text size smaller */
+            margin-top: 40px; /* Add more space above the contact text */
+            font-weight: bold; /* Make the contact text bold */
+        }
+    </style>
+    <script>
+        async function getGrades() {
+            const code = document.getElementById("code").value.trim();
+            const response = await fetch('grades.json');
+            if (!response.ok) {
+                document.getElementById("result").innerHTML = `<p>Error fetching grades.json file</p>`;
+                return;
+            }
+            const data = await response.json();
+            const student = data.find(student => student.Code == code);
+            if (student) {
+                document.getElementById("result").innerHTML = `
+                    <table border="1">
+                        <tr><th>Name</th><td>${student.Name}</td></tr>
+                        <tr><th>Attendance+Participation</th><td>${student['Attendance+Participation']}</td></tr>
+                        <tr><th>Attendance+Participation weight%</th><td>${student['Attendance+Participation weight%']}%</td></tr>
+                        <tr><th>Tasks</th><td>${student.Tasks}</td></tr>
+                        <tr><th>Tasks weight%</th><td>${student['Tasks weight%']}%</td></tr>
+                        <tr><th>Music Notebook</th><td>${student.Music_Notebook}</td></tr>
+                        <tr><th>Music Notebook weight%</th><td>${student['Music_Notebook weight%']}%</td></tr>
+                        <tr><th>Final Research</th><td>${student.Final_Research}</td></tr>
+                        <tr><th>Final Research weight%</th><td>${student['Final_Research weight%']}%</td></tr>
+                        <tr><th>Bonus</th><td>${student.Bonus}</td></tr>
+                        <tr><th>Final Grade</th><td>${student.Final_Grade}</td></tr>
+                        <tr><th>Comments</th><td>${student.Comments}</td></tr>
+                    </table>
+                    <div class="contact">Dr. Nawras Kurzom: nkurzom@gmail.com</div>
+                `;
+            } else {
+                document.getElementById("result").innerHTML = `<p>Code not found</p>`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Hi, this is the virtual assistant of Dr. Nawras Kurzom. Please enter your <span class="highlight">code</span> to view your grades (music therapy techniques-1 course) and then press Submit</h1>
+    <input type="text" id="code">
+    <button onclick="getGrades()">Submit</button>
+    <div id="result"></div>
+</body>
+</html>
